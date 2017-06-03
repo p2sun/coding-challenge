@@ -77,7 +77,7 @@ with open(ft1_loc, 'r') as ft1:
         # Don't process the last line which gives the number of tweets that contained unicode
         if line.__contains__('contained unicode') == False:
             #extract the hashtags from the string using our regex
-            hashtags = set(re.findall(hashtag_regex, line))
+            hashtags = set([hashtag.lower() for hashtag in re.findall(hashtag_regex, line)])
             #extract the timestamp from the string using our regex
             timestamp = re.findall(timestamp_regex, line)
             # if there exists a timestamp and a list of hashtags, process the tweet
