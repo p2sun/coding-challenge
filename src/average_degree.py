@@ -92,7 +92,7 @@ with open(ft1_loc, 'r') as ft1:
                 #decrease our counter for the number of nodes in our graph
                 uniqueHashtags = max(0, uniqueHashtags - oldHashtags)
                 #decrease our counter for the number of edges in our graph
-                totalDegrees -= oldConnections
+                totalDegrees = max(0, totalDegrees - oldConnections)
                 #-----------------------------------------------------------
 
                 #----------UPDATE OUR CURRENT NODE AND EDGES COUNTERS-------
