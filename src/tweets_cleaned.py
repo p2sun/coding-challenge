@@ -33,7 +33,7 @@ with open(tweet_loc, 'r') as input_file:
             text = text.decode('string_escape').replace('\n', '')
             # format the string we write to file
             output_string = text + ' ( timestamp: ' + timestamp + ')\n'
-            output_file.write(output_string + '\n')
+            output_file.write(output_string)
 
 # add the number of tweets containing unicode
 output_string += str(unicodeTweets) + " tweets contained unicode"
