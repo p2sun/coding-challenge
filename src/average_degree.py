@@ -26,9 +26,12 @@ tweets = []
 timestamp_regex = '[A-Z,a-z]{3} [A-Z,a-z]{3} [0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \+[0-9]{4} [0-9]{4}'
 hashtag_regex = '\S*#(?:\[[^\]]+\]|\S+)'
 
-def getSetDifference(setA,setB):
-    temp3 = [x for x in setA if x not in setB]
+#     Use this helper function to count the number of items that are found in both of the two collections
+#
+def getCollectionDifference(collectA,collectB):
+    temp3 = [x for x in collectA if x not in collectB]
     return temp3.__len__()
+
 #     Use this helper function to remove tweets from our adjacency list graph and tweets list that are
 #     more than a minute old compared to the most recent tweet
 #
@@ -61,7 +64,6 @@ def removeOldTweets(timestamp):
             # remove the hashtag node from our graph
             if adjacenyList[hashtag].__len__() == 0:
                 oldHashtags += 1
-                del adjacenyList[hashtag]
             # increment our old edges counter, by the number of connections we've removed
             oldConnections += connectedHashtags.__len__()
         else:
@@ -74,9 +76,9 @@ def removeOldTweets(timestamp):
 
 # open ft2 and write to it as we go along, we'll close it at the end
 
-
+ft2 = open(ft2_loc, 'w')
 # open ft1 to processed our cleaned tweets
-with open(ft1_loc, 'r') as ft1 and open(ft2_loc, 'w') as ft2:
+with open(ft1_loc, 'r') as ft1 :
     for line in ft1:
         # Don't process the last line which gives the number of tweets that contained unicode
         if line.__contains__('contained unicode') == False:
@@ -114,10 +116,16 @@ with open(ft1_loc, 'r') as ft1 and open(ft2_loc, 'w') as ft2:
                     tweets.append([currentTime, hashtag, connectedHashtags])
 
                     if hashtag in adjacenyList:
+                        # if the entry is in our adjacencyList but empty, it means that it was and old
+                        # entry that had its old tweets removes meaning it was removed from our graph
+                        # we should consider it now a new node
+                        if adjacenyList[hashtag].__len__() == 0:
+                            uniqueHashtags += 1
                         # merge the two sets of hashtags, the new connections and old connections
                         adjacentTags = adjacenyList[hashtag]
-                        totalDegrees += getSetDifference(connectedHashtags, adjacentTags)
                         adjacentTags.update(connectedHashtags)
+                        # get the total number of NEW connections added to the graph
+                        totalDegrees += getCollectionDifference(connectedHashtags, adjacentTags)
                         # update the entry in the adjacency list graph with the new set
                         adjacenyList[hashtag] = adjacentTags
                         
@@ -149,7 +157,7 @@ with open(ft1_loc, 'r') as ft1 and open(ft2_loc, 'w') as ft2:
             #-----WRITE THE OUTPUT STRING TO OUR OUTPUT FILE------------------------
             ft2.write(outputString + '\n')
 
-
+ft2.close()
 
 
 
